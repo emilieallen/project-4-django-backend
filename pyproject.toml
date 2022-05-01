@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "project-4-backend"
+version = "0.1.0"
+description = ""
+authors = ["Emilie Allen <emilie.allen@hotmail.co.uk>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.0.4"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.950"
+autopep8 = "^1.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
