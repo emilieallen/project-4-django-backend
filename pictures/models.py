@@ -1,4 +1,3 @@
-from unicodedata import category
 from django.db import models
 
 # Create your models here.
@@ -26,26 +25,16 @@ class Picture(models.Model):
         )
 
     location = models.CharField(max_length=10)
-    picture_url = models.CharField(max_length=300)
-    
+    picture_url = models.URLField()
     camera = models.CharField(max_length=30)
     settings = models.CharField(max_length=50)
 
-    # saved_by = models.ManyToManyField(
-    #     'jwt_auth.User',
-    #     related_name='saved_pictures',
-    #     blank='True'
-    # )
-
-    # added_by = models.ForeignKey(
-    #     'jwt_auth.User',
-    #     related_name='added_picture',
-    #     on_delete=models.DO_NOTHING,
-    #     blank=True
-    # )
+    added_by = models.ForeignKey(
+        'users.User',
+        related_name='added_picture',
+        on_delete=models.DO_NOTHING
+    )
 
     def __str__(self):
         """Formats entries in the Admin panel"""
         return f'{self.name}'
-
-
