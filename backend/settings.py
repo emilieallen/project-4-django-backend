@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-@n@x+nyl=-71ja*u6@_g%-n(pog&tdjbfbk)to%_%#rv35)@j7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["shutterspeed-django-app.herokuapp.com",
+               "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -125,6 +127,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Location where django collect all static files
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -136,12 +143,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Our react app gets hosted on port `3000`
     'http://127.0.0.1:3000'
 ]
-
-# REST_FRAMEWORK = {
-#     "DEFAULT_PERMISSION_CLASSES": [
-#         "rest_framework.permissions.AllowAny",  # new
-#     ],
-# }
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
