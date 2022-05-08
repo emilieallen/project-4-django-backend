@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.conf import settings
 
 
@@ -10,8 +10,10 @@ from rest_framework.exceptions import PermissionDenied
 
 import jwt
 
-from users.models import User
+# from users.models import User
 from .serializers import UserProfileSerializer, UserSerializer
+
+User = get_user_model()
 
 class RegisterView(APIView):
 
@@ -50,4 +52,4 @@ class LoginView(APIView):
             raise PermissionDenied({'message': 'Invalid credentials'})
 
         token = jwt.encode({'sub': user.id}, settings.SECRET_KEY, algorithm='HS256')
-        return Response({'token': token, 'message': f'Welcome back {user.username}!'})
+        return Response({'token': token, 'message': f'Welcome back {user.username}!'},status=status.HTTP_200_OK)
