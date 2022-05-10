@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import environ
 from pathlib import Path
+from datetime import timedelta
 import os
 import dj_database_url
 
@@ -32,8 +33,11 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
+# SECURITY WARNING: keep the secret key used in production secret!
+JWT_SECRET_KEY = env('JWT_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG')
+# DEBUG = env('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = ["shutterspeed-django-app.herokuapp.com",
                "localhost", "127.0.0.1"]
@@ -43,7 +47,9 @@ ALLOWED_HOSTS = ["shutterspeed-django-app.herokuapp.com",
 
 INSTALLED_APPS = [
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'rest_framework',
+    'dj_rest_auth',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -133,7 +139,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 
 # Location where django collect all static files
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
@@ -153,10 +159,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # REST_FRAMEWORK = {
-#     'DEFAULT_RENDERER_CLASSES': [
-#         'rest_framework.renderers.JSONRenderer',
-#         'rest_framework.renderers.BrowsableAPIRenderer',
-#     ],
+#     # 'DEFAULT_RENDERER_CLASSES': [
+#     #     'rest_framework.renderers.JSONRenderer',
+#     #     'rest_framework.renderers.BrowsableAPIRenderer',
+#     # ],
 #     'DEFAULT_AUTHENTICATION_CLASSES': [
 #         'users.authentication.JWTAuthentication',
 #     ],
@@ -171,6 +177,14 @@ REST_FRAMEWORK = {
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'users.authentication.JWTAuthentication'
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ]
 }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
+    'ALGORITHM': 'HS256',
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+LOGIN_REDIRECT_URL = '/pictures'
