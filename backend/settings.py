@@ -10,19 +10,33 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import environ
 from pathlib import Path
+from datetime import timedelta
+import os
+import dj_database_url
 
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@n@x+nyl=-71ja*u6@_g%-n(pog&tdjbfbk)to%_%#rv35)@j7'
+SECRET_KEY = env('SECRET_KEY')
 
+# SECURITY WARNING: keep the secret key used in production secret!
+JWT_SECRET_KEY = env('JWT_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = env('DEBUG')
 DEBUG = True
 
 ALLOWED_HOSTS = ["shutterspeed-django-app.herokuapp.com",
@@ -33,7 +47,9 @@ ALLOWED_HOSTS = ["shutterspeed-django-app.herokuapp.com",
 
 INSTALLED_APPS = [
     'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'rest_framework',
+    'dj_rest_auth',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -82,14 +98,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'pictures-db',
-        'HOST': 'localhost',
-        'PORT': 5432
-    }
+    'default': dj_database_url.config(
+        default='postgres://milou@localhost/pictures-db', conn_max_age=600
+    )
 }
 
+# DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -144,12 +158,33 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:3000'
 ]
 
+# REST_FRAMEWORK = {
+#     # 'DEFAULT_RENDERER_CLASSES': [
+#     #     'rest_framework.renderers.JSONRenderer',
+#     #     'rest_framework.renderers.BrowsableAPIRenderer',
+#     # ],
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'users.authentication.JWTAuthentication',
+#     ],
+# }
+
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-    ],
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'users.authentication.JWTAuthentication',
-    ],
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ]
 }
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
+    'ALGORITHM': 'HS256',
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+LOGIN_REDIRECT_URL = '/pictures'

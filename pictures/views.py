@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
-from backend.permissions import IsAuthor
+from backend.permissions import IsAuthor, IsAuthorOrReadOnly
 from .models import Picture
 from .serializers import PictureSerializer
 
@@ -11,6 +11,7 @@ class PictureListView(generics.ListCreateAPIView):
     # Permission classes are not applied for list views -> only for views
     # which deal with a single instance of an object.
     permission_classes = (IsAuthenticated, )
+    # permission_classes = (IsAuthorOrReadOnly, )
     queryset = Picture.objects.all()
     serializer_class = PictureSerializer
 

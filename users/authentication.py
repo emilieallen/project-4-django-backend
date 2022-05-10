@@ -21,7 +21,8 @@ class JWTAuthentication(BasicAuthentication):
         token = header.replace('Bearer ', '')
 
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=['HS256'])
+            print(settings.JWT_SECRET_KEY)
             user = User.objects.get(pk=payload.get('sub'))
 
         except jwt.exceptions.InvalidTokenError:

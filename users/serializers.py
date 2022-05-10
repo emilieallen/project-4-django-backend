@@ -17,7 +17,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ('username', 'added_picture')
 
 
-class UserSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
 
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
@@ -41,3 +41,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'email', 'password', 'password_confirmation',)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class LoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
