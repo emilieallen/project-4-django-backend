@@ -36,8 +36,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: keep the secret key used in production secret!
 JWT_SECRET_KEY = env('JWT_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env('DEBUG')
-DEBUG = True
+DEBUG = env('DEBUG')
+# DEBUG = True
 
 ALLOWED_HOSTS = ["shutterspeed-django-app.herokuapp.com",
                "localhost", "127.0.0.1"]
