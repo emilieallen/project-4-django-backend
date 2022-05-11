@@ -17,14 +17,14 @@ class Picture(models.Model):
     A model for pictures.
     """
 
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=150)
     description = models.CharField(max_length=100)
 
     category = models.IntegerField(
         choices=CATEGORY
         )
 
-    location = models.CharField(max_length=10)
+    location = models.CharField(max_length=50)
     picture_url = models.URLField()
     camera = models.CharField(max_length=30)
     settings = models.CharField(max_length=50)
